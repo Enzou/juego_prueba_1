@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Constructor de Mundos — Probar mundo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Constructor de Mundos</h1>
+    <span class="info-tematica" id="infoTematica">Sin temática elegida</span>
+  </header>
+
+  <div class="contenedor" style="padding-bottom: 0;">
+    <nav class="mapa-progreso" aria-label="Progreso">
+      <div class="paso completado">1. Inicio</div>
+      <div class="paso completado">2. Diseñar</div>
+      <div class="paso completado">3. Programar</div>
+      <div class="paso activo">4. Probar</div>
+    </nav>
+
+    <section class="panel" aria-label="Instrucciones del nivel">
+      <h2 id="tituloNivel">Nivel</h2>
+      <p id="objetivoNivel" class="ayuda"></p>
+      <p class="ayuda">
+        <strong>Cómo usar esta pantalla:</strong>
+        Tocá ▶ Iniciar para empezar. Podés pausar, detener o avanzar paso a paso.
+        Si algo no anda como querías, volvé a programar.
+      </p>
+    </section>
+  </div>
+
+  <main class="layout-dos">
+    <aside class="panel" aria-label="Estado en tiempo real">
+      <h2>Estado en tiempo real</h2>
+      <h3>Objetos</h3>
+      <pre class="estado-objetos" id="estadoObjetos">(sin datos aún)</pre>
+      <h3>Variables</h3>
+      <pre class="estado-objetos" id="estadoVariables">(sin variables creadas)</pre>
+    </aside>
+
+    <section class="panel" aria-label="Mundo simulado">
+      <h2>Mundo simulado</h2>
+      <div class="controles-simulador">
+        <button id="botonIniciar">▶ Iniciar</button>
+        <button id="botonPausar" class="secundario" disabled>⏸ Pausar</button>
+        <button id="botonDetener" class="secundario" disabled>⏹ Detener</button>
+        <button id="botonPaso" class="secundario">⏮ Paso a paso</button>
+        <button id="botonVolverProg" class="secundario">← Volver a programar</button>
+      </div>
+      <p class="ayuda" id="estadoSim">Listo para iniciar la simulación.</p>
+      <canvas id="canvasMundo" width="500" height="500" aria-label="Vista del mundo"></canvas>
+      <div id="zonaMensaje" aria-live="polite" style="margin-top: 12px;"></div>
+      <div class="consola-errores" id="consolaErrores" hidden>
+        <div class="titulo-error">Hay un problema en la simulación</div>
+        <div id="textoError"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/state.js"></script>
+  <script src="js/simulator.js"></script>
+</body>
+</html>

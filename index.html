@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Constructor de Mundos — Inicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Constructor de Mundos</h1>
+    <span class="info-tematica" id="infoTematica">Sin temática elegida</span>
+  </header>
+
+  <main class="contenedor bienvenida">
+    <h1>Hola. Vas a construir un mundo.</h1>
+    <p class="subtitulo">
+      Acá vas a diseñar un escenario, programar lo que hace cada cosa y probarlo.
+    </p>
+
+    <section class="instrucciones" aria-label="Instrucciones">
+      <h2>Cómo funciona</h2>
+      <ol>
+        <li><strong>Elegís una temática.</strong> Esa temática se va a usar en todas las pantallas.</li>
+        <li><strong>Diseñás el escenario.</strong> Colocás objetos en una grilla.</li>
+        <li><strong>Programás.</strong> Armás bloques que indican qué hace cada objeto.</li>
+        <li><strong>Probás.</strong> Mirás cómo se comporta tu mundo y lo ajustás.</li>
+      </ol>
+      <p style="margin-top: 12px;">
+        No hay tiempo límite. Podés volver atrás cuando quieras.
+      </p>
+    </section>
+
+    <section aria-label="Selección de temática">
+      <h2>Paso 1. Elegí una temática</h2>
+      <p class="subtitulo">Tocá una de las cinco opciones. La que elijas se va a marcar.</p>
+      <div class="tematicas" id="tematicas"></div>
+    </section>
+
+    <section aria-label="Niveles">
+      <h2>Paso 2. Elegí un nivel</h2>
+      <p class="subtitulo" id="estadoNiveles">Primero elegí una temática. Después podés empezar el nivel 1.</p>
+      <div class="niveles" id="niveles"></div>
+    </section>
+
+    <div class="acciones-pie">
+      <button id="botonEmpezar" disabled>Empezar a diseñar →</button>
+      <button id="botonReiniciar" class="secundario">Reiniciar todo</button>
+    </div>
+
+    <div id="zonaMensaje" aria-live="polite"></div>
+  </main>
+
+  <script src="js/state.js"></script>
+  <script>
+    (function() {
+      const contenedorTematicas = document.getElementById("tematicas");
+      const contenedorNiveles   = document.getElementById("niveles");
+      const infoTematica        = document.getElementById("infoTematica");
+      const estadoNiveles       = document.getElementById("estadoNiveles");
+      const botonEmpezar        = document.getElementById("botonEmpezar");
+      const botonReiniciar      = document.getElementById("botonReiniciar");
+      const zonaMensaje         = document.getElementById("zonaMensaje");
+
+      function mostrarMensaje(texto, tipo) {
+        zonaMensaje.innerHTML = "";
+        if (!texto) return;
+        const div = document.createElement("div");
+        div.className = "mensaje " + (tipo || "info");
+        div.textContent = texto;
+        zonaMensaje.appendChild(div);
+      }
+
+      function pintarTematicas() {
+        contenedorTematicas.innerHTML = "";
+        const estado = Estado.cargar();
+        Object.values(TEMATICAS).forEach(function(t) {
+          const boton = document.createElement("button");
+          boton.className = "tarjeta-tematica" + (estado.tematica === t.id ? " seleccionada" : "");
+          boton.setAttribute("type", "button");
+          boton.setAttribute("aria-pressed", estado.tematica === t.id ? "true" : "false");
+          boton.innerHTML = '<span class="icono" aria-hidden="true">' + t.icono + '</span>' + t.nombre;
+          boton.addEventListener("click", function() {
+            Estado.setTematica(t.id);
+            actualizar();
+            mostrarMensaje("Elegiste la temática: " + t.nombre + ". Ahora podés elegir el nivel.", "exito");
+          });
+          contenedorTematicas.appendChild(boton);
+        });
+      }
+
+      function pintarNiveles() {
+        contenedorNiveles.innerHTML = "";
+        const estado = Estado.cargar();
+        const hayTematica = !!estado.tematica;
+        NIVELES.forEach(function(nivel) {
+          const desbloqueado = Estado.nivelEstaDesbloqueado(nivel.numero);
+          const completado   = estado.nivelesCompletados.includes(nivel.numero);
+          const tarjeta = document.createElement("button");
+          tarjeta.className = "tarjeta-nivel"
+            + (completado ? " completado" : "")
+            + ((!desbloqueado || !hayTematica) ? " bloqueado" : "");
+          tarjeta.setAttribute("type", "button");
+          tarjeta.disabled = (!desbloqueado || !hayTematica);
+          tarjeta.innerHTML =
+            '<span class="numero">Nivel ' + nivel.numero + '</span>' +
+            '<span class="titulo">' + nivel.nombre + '</span>' +
+            '<span class="estado">' +
+              (completado ? "✓ Completado. Podés repetirlo." :
+                desbloqueado ? (hayTematica ? "Disponible." : "Elegí primero una temática.") :
+                "Bloqueado. Completá el nivel anterior.") +
+            '</span>';
+          tarjeta.addEventListener("click", function() {
+            if (tarjeta.disabled) return;
+            Estado.setNivelActual(nivel.numero);
+            actualizar();
+            mostrarMensaje(
+              "Nivel " + nivel.numero + " seleccionado: " + nivel.nombre +
+              ". Objetivo: " + nivel.objetivo,
+              "info"
+            );
+          });
+          contenedorNiveles.appendChild(tarjeta);
+        });
+      }
+
+      function actualizarBotonEmpezar() {
+        const estado = Estado.cargar();
+        const ok = !!estado.tematica && !!estado.nivelActual;
+        botonEmpezar.disabled = !ok;
+      }
+
+      function actualizarInfoCabecera() {
+        const t = Estado.getTematica();
+        const estado = Estado.cargar();
+        if (t) {
+          infoTematica.textContent = "Temática: " + t.icono + " " + t.nombre + " · Nivel " + (estado.nivelActual || 1);
+        } else {
+          infoTematica.textContent = "Sin temática elegida";
+        }
+        estadoNiveles.textContent = t
+          ? "Tocá un nivel para elegirlo. El nivel actual aparece marcado en azul."
+          : "Primero elegí una temática. Después podés empezar el nivel 1.";
+      }
+
+      function actualizar() {
+        pintarTematicas();
+        pintarNiveles();
+        actualizarBotonEmpezar();
+        actualizarInfoCabecera();
+      }
+
+      botonEmpezar.addEventListener("click", function() {
+        const estado = Estado.cargar();
+        if (!estado.tematica) {
+          mostrarMensaje("Falta elegir una temática antes de empezar.", "error");
+          return;
+        }
+        if (!estado.nivelActual) {
+          mostrarMensaje("Falta elegir un nivel antes de empezar.", "error");
+          return;
+        }
+        mostrarMensaje("Vamos al editor de escenarios.", "info");
+        window.location.href = "designer.html";
+      });
+
+      botonReiniciar.addEventListener("click", function() {
+        const ok = window.confirm("Esto borra la temática elegida, los escenarios y los niveles completados. ¿Querés continuar?");
+        if (!ok) return;
+        Estado.reiniciar();
+        actualizar();
+        mostrarMensaje("Se reinició todo. Podés volver a elegir una temática.", "aviso");
+      });
+
+      actualizar();
+    })();
+  </script>
+</body>
+</html>

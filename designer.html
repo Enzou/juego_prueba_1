@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Constructor de Mundos — Diseñar escenario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Constructor de Mundos</h1>
+    <span class="info-tematica" id="infoTematica">Sin temática elegida</span>
+  </header>
+
+  <div class="contenedor" style="padding-bottom: 0;">
+    <nav class="mapa-progreso" aria-label="Progreso">
+      <div class="paso completado">1. Inicio</div>
+      <div class="paso activo">2. Diseñar</div>
+      <div class="paso">3. Programar</div>
+      <div class="paso">4. Probar</div>
+    </nav>
+
+    <section class="panel" aria-label="Instrucciones del nivel">
+      <h2 id="tituloNivel">Nivel</h2>
+      <p id="objetivoNivel" class="ayuda"></p>
+      <p class="ayuda">
+        <strong>Cómo usar esta pantalla:</strong>
+        1) Tocá un objeto del panel izquierdo para elegirlo.
+        2) Tocá una casilla de la grilla para colocarlo ahí.
+        3) Para borrar un objeto, hacé click derecho sobre la casilla
+        (en computadora) o usá el botón "Quitar" en la lista de la derecha.
+      </p>
+    </section>
+  </div>
+
+  <main class="layout-tres">
+    <aside class="panel" aria-label="Biblioteca de objetos">
+      <h2>Objetos disponibles</h2>
+      <p class="ayuda">Tocá uno para elegirlo. La opción elegida queda marcada en azul.</p>
+      <div class="biblioteca" id="biblioteca"></div>
+    </aside>
+
+    <section class="panel" aria-label="Escenario">
+      <h2>Tu escenario</h2>
+      <p class="ayuda" id="ayudaGrilla">Elegí primero un objeto del panel izquierdo y después tocá una casilla.</p>
+      <div class="grilla-mundo" id="grilla" oncontextmenu="return false;"></div>
+      <div id="zonaMensaje" aria-live="polite" style="margin-top: 12px;"></div>
+    </section>
+
+    <aside class="panel" aria-label="Lista de objetos colocados">
+      <h2>Objetos colocados</h2>
+      <p class="ayuda" id="contadorObjetos">Aún no colocaste ningún objeto.</p>
+      <ul class="lista-objetos" id="listaObjetos"></ul>
+    </aside>
+  </main>
+
+  <div class="contenedor">
+    <div class="acciones-pie">
+      <button class="secundario" id="botonVolver">← Volver al inicio</button>
+      <button class="secundario" id="botonLimpiar">Limpiar escenario</button>
+      <button class="acento" id="botonProgramar" disabled>Listo, programar →</button>
+    </div>
+  </div>
+
+  <script src="js/state.js"></script>
+  <script src="js/designer.js"></script>
+</body>
+</html>

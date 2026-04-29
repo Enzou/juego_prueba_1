@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Constructor de Mundos — Programar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Constructor de Mundos</h1>
+    <span class="info-tematica" id="infoTematica">Sin temática elegida</span>
+  </header>
+
+  <div class="contenedor" style="padding-bottom: 0;">
+    <nav class="mapa-progreso" aria-label="Progreso">
+      <div class="paso completado">1. Inicio</div>
+      <div class="paso completado">2. Diseñar</div>
+      <div class="paso activo">3. Programar</div>
+      <div class="paso">4. Probar</div>
+    </nav>
+
+    <section class="panel" aria-label="Instrucciones del nivel">
+      <h2 id="tituloNivel">Nivel</h2>
+      <p id="objetivoNivel" class="ayuda"></p>
+      <p class="ayuda">
+        <strong>Cómo usar esta pantalla:</strong>
+        1) Elegí un objeto en la barra de arriba (a quién le vas a programar).
+        2) Arrastrá un bloque de la izquierda hacia la zona del programa.
+        3) Cuando termines, tocá "Probar mundo →".
+      </p>
+    </section>
+  </div>
+
+  <main class="layout-tres">
+    <aside class="panel" aria-label="Bloques disponibles">
+      <h2>Bloques</h2>
+      <p class="ayuda">Arrastrá un bloque hacia la zona de programa de la derecha.</p>
+      <div class="paleta" id="paleta"></div>
+    </aside>
+
+    <section class="panel" aria-label="Programa del objeto">
+      <h2>Programa del objeto</h2>
+      <div class="selector-objeto" id="selectorObjeto" role="tablist" aria-label="Elegir objeto a programar"></div>
+      <p class="ayuda" id="ayudaPrograma">Elegí un objeto arriba y soltá los bloques en el área de abajo.</p>
+      <div class="programa" id="programa" aria-label="Lista de bloques del programa"></div>
+      <div id="zonaMensaje" aria-live="polite" style="margin-top: 12px;"></div>
+    </section>
+
+    <aside class="panel" aria-label="Vista de código">
+      <h2>Código equivalente</h2>
+      <p class="ayuda">Esto es lo que harán los bloques cuando ejecutes la simulación.</p>
+      <button class="toggle-codigo" id="toggleCodigo" type="button" aria-expanded="true">Ocultar código</button>
+      <pre class="vista-codigo" id="vistaCodigo"></pre>
+    </aside>
+  </main>
+
+  <div class="contenedor">
+    <div class="acciones-pie">
+      <button class="secundario" id="botonVolverDis">← Volver a diseñar</button>
+      <button class="secundario" id="botonLimpiarPrograma">Limpiar programa de este objeto</button>
+      <button class="acento" id="botonProbar" disabled>Probar mundo →</button>
+    </div>
+  </div>
+
+  <script src="js/state.js"></script>
+  <script src="js/blocks.js"></script>
+</body>
+</html>
